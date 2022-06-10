@@ -18,6 +18,9 @@ export class UsersService {
       throw new BadRequestException('Email already exists');
 
     const passwordHash = hashSync(password, 10);
-    return this.prisma.user.create({ data: { email, passwordHash } });
+    const result = await this.prisma.user.create({
+      data: { email, passwordHash },
+    });
+    return { id: result.id, email };
   }
 }
