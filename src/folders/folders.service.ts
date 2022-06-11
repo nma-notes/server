@@ -7,15 +7,23 @@ import { User } from '.prisma/client';
 export class FoldersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(owner: User, take: number, skip: number) {
+  async findAll(currentUser: User, take: number, skip: number) {
     return this.prisma.folder.findMany({
       take,
       skip,
-      where: { ownerId: owner.id },
+      where: { ownerId: currentUser.id },
     });
   }
 
-  async create(folder: CreateFolderDto) {
-    return this.prisma.folder.create({ data: { ...folder } });
+  async create(currentUser: User, folder: CreateFolderDto) {
+    return this.prisma.folder.create({
+      data: { ...folder, ownerId: currentUser.id },
+    });
+  }
+
+  async delete(currentUser: User, id: string) {
+    return this.prisma.folder.deleteMany({
+      where: { id, ownerId: currentUser.id },
+    });
   }
 }

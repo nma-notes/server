@@ -4,8 +4,4 @@ export default class CreateFolderDto {
   @IsString()
   @NotEquals(null)
   name: string;
-
-  @IsString()
-  @NotEquals(null)
-  ownerId: string;
 }
