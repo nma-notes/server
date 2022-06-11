@@ -26,4 +26,11 @@ export class FoldersService {
       where: { id, ownerId: currentUser.id },
     });
   }
+
+  async update(currentUser: User, id: string, folder: CreateFolderDto) {
+    return this.prisma.folder.updateMany({
+      where: { id, ownerId: currentUser.id },
+      data: folder,
+    });
+  }
 }
