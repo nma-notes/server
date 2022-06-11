@@ -15,6 +15,13 @@ export class FoldersService {
     });
   }
 
+  async findById(currentUser: User, id: string) {
+    return this.prisma.folder.findFirst({
+      where: { id, ownerId: currentUser.id },
+      include: { notes: true },
+    });
+  }
+
   async create(currentUser: User, folder: CreateFolderDto) {
     return this.prisma.folder.create({
       data: { ...folder, ownerId: currentUser.id },
