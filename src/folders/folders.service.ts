@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import CreateFolderDto from './dto/create.folder.dto';
 import { User } from '.prisma/client';
+import { UpdateFolderDto } from './dto/update.folder.dto';
 
 @Injectable()
 export class FoldersService {
@@ -15,10 +16,10 @@ export class FoldersService {
     });
   }
 
-  async findById(currentUser: User, id: string) {
+  async findById(currentUser: User, id: string, notes = true) {
     const result = await this.prisma.folder.findFirst({
       where: { id, ownerId: currentUser.id },
-      include: { notes: true },
+      include: { notes },
     });
 
     if (!result)
@@ -39,10 +40,15 @@ export class FoldersService {
     });
   }
 
-  async update(currentUser: User, id: string, folder: CreateFolderDto) {
-    return this.prisma.folder.updateMany({
-      where: { id, ownerId: currentUser.id },
-      data: folder,
+  async update(currentUser: User, id: string, data: UpdateFolderDto) {
+    const folder = await this.findById(currentUser, id, false);
+
+    if (!folder)
+      throw new HttpException('Folder not found', HttpStatus.NOT_FOUND);
+
+    return this.prisma.folder.update({
+      where: { id },
+      data,
     });
   }
 }

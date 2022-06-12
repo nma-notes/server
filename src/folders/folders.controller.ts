@@ -7,10 +7,12 @@ import {
   Get,
   Query,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import CreateFolderDto from './dto/create.folder.dto';
+import { UpdateFolderDto } from './dto/update.folder.dto';
 
 @Controller('folders')
 @UseGuards(JwtAuthGuard)
@@ -32,6 +34,15 @@ export class FoldersController {
   @Post('/')
   async create(@Body() createFolderDto: CreateFolderDto, @Request() req) {
     return this.foldersService.create(req.user, createFolderDto);
+  }
+
+  @Patch('/:id')
+  async update(
+    @Param('id') id,
+    @Body() updateFolderDto: UpdateFolderDto,
+    @Request() req,
+  ) {
+    return this.foldersService.update(req.user, id, updateFolderDto);
   }
 
   @Get('/:id')
