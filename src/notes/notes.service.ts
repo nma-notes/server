@@ -8,17 +8,17 @@ import UpdateNoteDto from './dto/update.note.dto';
 export class NotesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(folder: Folder, take: number, skip: number) {
+  async findAll(folderId: string, take: number, skip: number) {
     return this.prisma.note.findMany({
-      where: { folderId: folder.id },
+      where: { folderId },
       take,
       skip,
     });
   }
 
-  async findById(folder: Folder, id: string) {
+  async findById(folderId: string, id: string) {
     const result = await this.prisma.note.findFirst({
-      where: { id, folderId: folder.id },
+      where: { id, folderId },
     });
 
     if (!result)
@@ -27,14 +27,14 @@ export class NotesService {
     return result;
   }
 
-  async create(folder: Folder, data: CreateNoteDto) {
+  async create(folderId: string, data: CreateNoteDto) {
     return this.prisma.note.create({
-      data: { ...data, folderId: folder.id },
+      data: { ...data, folderId },
     });
   }
 
-  async update(folder: Folder, id: string, data: UpdateNoteDto) {
-    await this.findById(folder, id);
+  async update(folderId: string, id: string, data: UpdateNoteDto) {
+    await this.findById(folderId, id);
 
     return this.prisma.note.update({
       where: { id },
@@ -42,8 +42,8 @@ export class NotesService {
     });
   }
 
-  async delete(folder: Folder, id: string) {
-    await this.findById(folder, id);
+  async delete(folderId: string, id: string) {
+    await this.findById(folderId, id);
 
     return this.prisma.note.delete({ where: { id } });
   }
