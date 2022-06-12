@@ -6,6 +6,7 @@ import {
   Body,
   Get,
   Query,
+  Param,
 } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -31,5 +32,10 @@ export class FoldersController {
   @Post('/')
   async create(@Body() createFolderDto: CreateFolderDto, @Request() req) {
     return this.foldersService.create(req.user, createFolderDto);
+  }
+
+  @Get('/:id')
+  async findById(@Param('id') id, @Request() req) {
+    return this.foldersService.findById(req.user, id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import CreateFolderDto from './dto/create.folder.dto';
 import { User } from '.prisma/client';
@@ -16,10 +16,15 @@ export class FoldersService {
   }
 
   async findById(currentUser: User, id: string) {
-    return this.prisma.folder.findFirst({
+    const result = await this.prisma.folder.findFirst({
       where: { id, ownerId: currentUser.id },
       include: { notes: true },
     });
+
+    if (!result)
+      throw new HttpException('Folder not found', HttpStatus.NOT_FOUND);
+
+    return result;
   }
 
   async create(currentUser: User, folder: CreateFolderDto) {
