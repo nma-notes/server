@@ -8,6 +8,7 @@ import {
   Query,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -48,5 +49,10 @@ export class FoldersController {
   @Get('/:id')
   async findById(@Param('id') id, @Request() req) {
     return this.foldersService.findById(req.user, id);
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id, @Request() req) {
+    return this.foldersService.delete(req.user, id);
   }
 }
