@@ -35,16 +35,13 @@ export class FoldersService {
   }
 
   async delete(currentUser: User, id: string) {
-    return this.prisma.folder.deleteMany({
-      where: { id, ownerId: currentUser.id },
-    });
+    await this.findById(currentUser, id, false);
+
+    return this.prisma.folder.delete({ where: { id } });
   }
 
   async update(currentUser: User, id: string, data: UpdateFolderDto) {
-    const folder = await this.findById(currentUser, id, false);
-
-    if (!folder)
-      throw new HttpException('Folder not found', HttpStatus.NOT_FOUND);
+    await this.findById(currentUser, id, false);
 
     return this.prisma.folder.update({
       where: { id },
