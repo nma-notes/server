@@ -7,12 +7,16 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import CreateNoteDto from './dto/create.note.dto';
 import UpdateNoteDto from './dto/update.note.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FolderGuard } from './folder.guard';
 
 @Controller('folders/:folderId/notes')
+@UseGuards(JwtAuthGuard, FolderGuard)
 export class NotesController {
   constructor(private notesService: NotesService) {}
 
